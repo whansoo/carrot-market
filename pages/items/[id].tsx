@@ -1,7 +1,9 @@
+import Layout from "@components/components/layout";
 
 
 export default function ItemDetail() {
     return (
+      <Layout canGoBack>
         <div className="px-4 py-10">
           <div className="mb-8">
             <div className="h-96 bg-slate-300"/>
@@ -60,5 +62,7 @@ export default function ItemDetail() {
             </div>
           </div>
         </div>
+      </Layout>
+        
       );
 }

@@ -1,8 +1,10 @@
+import Layout from "@components/components/layout";
 
 
 export default function Live () {
     return (
-        <div className="py-10 divide-y-2 space-y-4">
+        <Layout title="라이브" hasTabBar>
+        <div className="divide-y-2 space-y-4">
            {[1,1,1,1].map((_, i) => (
              <div className="pt-4 px-4 " key={i}>
                 <div className="w-full rounded-md shadow-sm bg-slate-300 aspect-video" />
@@ -15,6 +17,8 @@ export default function Live () {
            </svg>
             </button>
         </div>
+        </Layout>
+        
         
     )
 }

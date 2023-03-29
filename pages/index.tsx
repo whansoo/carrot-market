@@ -1,14 +1,16 @@
 
+import Layout from '@components/components/layout'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   return (
-    <div className='flex flex-col space-y-5 py-10'>
+    <Layout title='홈' hasTabBar>
+  <div className='flex flex-col space-y-5'>
     {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
       <div key={i} className='flex px-4 border-b pb-4 cursor-pointer justify-between'>
-        <div className='flex space-x-4'>
+        <div className='flex space-x-4' id='nav'>
           <div className='w-20 h-20 bg-gray-400 rounded-md'/>
           <div className='pt-2 flex flex-col'>
             <h3 className='text-sm font-medium text-gray-900'>New iPhone 14</h3>
@@ -72,5 +74,7 @@ export default function Home() {
       </svg>
     </button>
   </div>
+    </Layout>
+    
   )
 }
