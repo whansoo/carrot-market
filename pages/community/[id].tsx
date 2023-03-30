@@ -1,7 +1,10 @@
+import Layout from "@components/components/layout";
+import TextArea from "@components/components/textarea";
 
 
 export default function CommunityPostDetail() {
     return (
+      <Layout canGoBack>
         <div>
             <span className="inline-flex my-2.5 ml-4 items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">동네질문</span>
             <div className="flex mb-3 px-4 cursor-pointer py-3 border-b items-center space-x-3">
@@ -72,9 +75,14 @@ export default function CommunityPostDetail() {
             </div>
         </div>
         <div className="px-4">
-          <textarea id="description" className="mt-1 shadow-sm w-full focus:ring-orange-500 rounded-md border-gray-300 focus:border-orange-500 "rows={4} placeholder="답변을 달아주세요!"/>
+        <TextArea
+            name="description"
+            placeholder="답변 달아줘잉!"
+            required
+          />
           <button className="mt-2 w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none">Reply</button>
         </div>
       </div>
+      </Layout>
         );
 }
