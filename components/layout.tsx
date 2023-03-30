@@ -1,4 +1,4 @@
-import { cls } from "@components/libs/utils";
+import { cls } from "@components/libs/client/utils";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
