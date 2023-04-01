@@ -2,6 +2,7 @@ import Twilio from "twilio";
 import client from "@components/libs/server/client";
 import withHandler, { ResponseType } from "@components/libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
+import smtpTransport from "@components/libs/server/email";
 
 
 
@@ -36,6 +37,28 @@ async function handler(req:NextApiRequest, res:NextApiResponse<ResponseType>) {
     });
     console.log(message);
   }
+  if (email) {
+    const mailOptions = {
+    from: process.env.MAIL_ID,
+    to: email,
+    subject: "Nomad Carrot Authentication Email",
+    text: `Authentication Code : ${payload}`,
+    };
+    const result = await smtpTransport.sendMail(
+    mailOptions,
+    (error, responses) => {
+    if (error) {
+    console.log(error);
+    return null;
+    } else {
+    console.log(responses);
+    return null;
+    }
+    }
+    );
+    smtpTransport.close();
+    console.log(result);
+    }
  /* if (email) {
     user = await client.user.findUnique({
       where: {
