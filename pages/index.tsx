@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <Layout title="홈" hasTabBar>
     <div className="flex flex-col space-y-5 divide-y">
-      {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
+      {/* {[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
         <Item
           id={i}
           key={i}
@@ -16,7 +16,7 @@ export default function Home() {
           comments={1}
           hearts={1}
         />
-      ))}
+      ))} */}
       <FloatingButton href="/items/upload">
         <svg
           className="h-6 w-6"
