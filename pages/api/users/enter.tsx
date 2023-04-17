@@ -1,16 +1,16 @@
-import Twilio from "twilio";
+// import Twilio from "twilio";
 import client from "@components/libs/server/client";
 import withHandler, { ResponseType } from "@components/libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
-import smtpTransport from "@components/libs/server/email";
+// import smtpTransport from "@components/libs/server/email";
 
 
 
-const twilioClient = Twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
+// const twilioClient = Twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 
 async function handler(req:NextApiRequest, res:NextApiResponse<ResponseType>) {
   const { email, phone } = req.body;
-  const user = phone ? { phone: +phone } : email ? { email } : null;
+  const user = phone ? { phone } : email ? { email } : null;
   if (!user) return res.status(400).json({ ok: false });
   const payload = Math.floor(100000 + Math.random() * 900000) + "";
   const token = await client.token.create({
@@ -100,4 +100,4 @@ async function handler(req:NextApiRequest, res:NextApiResponse<ResponseType>) {
   });
 } 
 
-export default withHandler("POST", handler);
+export default withHandler({ method: "POST", handler, isPrivate: false });
