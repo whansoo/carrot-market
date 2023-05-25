@@ -1,9 +1,14 @@
 import Layout from "@components/components/layout";
 import TextArea from "@components/components/textarea";
+import useMutation from "@components/libs/client/useMutation";
+import { cls } from "@components/libs/client/utils";
 import { Answer, Post, User } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import useSWR from "swr"
+
 
 interface AnswerWithUser extends Answer {
   user: User;
@@ -21,11 +26,59 @@ interface PostWithUser extends Post {
 interface CommunityPostResponse {
   ok: boolean;
   post: PostWithUser;
+  isWondering: boolean;
+}
+
+interface AnswerForm {
+  answer: string;
+}
+
+interface AnswerResponse {
+  ok: boolean;
+  response: Answer;
 }
 
 export default function CommunityPostDetail() {
   const router = useRouter();
-  const {data, error} = useSWR<CommunityPostResponse>(router.query.id ? `/api/posts/${router.query.id}`: null);
+  const { register, handleSubmit, reset } = useForm<AnswerForm>();
+  const {data, mutate} = useSWR<CommunityPostResponse>(router.query.id ? `/api/posts/${router.query.id}`: null);
+
+  const [wonder, { loading }] = useMutation(
+    `/api/posts/${router.query.id}/wonder`
+  );
+  const [sendAnswer, { data: answerData, loading: answerLoading }] =
+    useMutation<AnswerResponse>(`/api/posts/${router.query.id}/answers`);
+
+  const onWonderClick = () => {
+    if (!data) return;
+    mutate(
+      {
+        ...data,
+        post: {
+          ...data.post,
+          _count: {
+            ...data.post._count,
+            wondering: data.isWondering ? data?.post._count.wondering - 1 : data?.post._count.wondering + 1,
+          },
+        },
+        isWondering: !data.isWondering,
+      },
+      false
+    );
+    if (!loading) {
+      wonder({});
+    }
+  };
+  const onValid = (form: AnswerForm) => {
+    if (answerLoading) return;
+    sendAnswer(form);
+  };
+  useEffect(() => {
+    if (answerData && answerData.ok) {
+      reset();
+      mutate();
+    }
+  }, [answerData, reset, mutate]);
     return (
       <Layout canGoBack>
         <div>
@@ -45,7 +98,13 @@ export default function CommunityPostDetail() {
               <span className="text-orange-500 font-medium">Q.</span>{" "}{data?.post?.question}
             </div>
             <div className="flex px-4 space-x-5 mt-3 text-gray-700 py-2.5 border-t border-b-[2px] w-full">
-              <span className="flex space-x-2 items-center text-sm">
+            <button
+              onClick={onWonderClick}
+              className={cls(
+                "flex space-x-2 items-center text-sm",
+                data?.isWondering ? "text-teal-600" : ""
+              )}
+            >
                 <svg
                   className="w-4 h-4"
                   fill="none"
@@ -61,7 +120,7 @@ export default function CommunityPostDetail() {
                   ></path>
                 </svg>
                 <span>궁금해요 {data?.post._count.wondering}</span>
-              </span>
+                </button>
               <span className="flex space-x-2 items-center text-sm">
                 <svg
                   className="w-4 h-4"
@@ -93,14 +152,17 @@ export default function CommunityPostDetail() {
             </div>
           ))}
         </div>
-        <div className="px-4">
+        <form className="px-4" onSubmit={handleSubmit(onValid)}>
         <TextArea
             name="description"
             placeholder="답변 달아줘잉!"
             required
+            register={register("answer", { required: true, minLength: 5 })}
           />
-          <button className="mt-2 w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none">Reply</button>
-        </div>
+          <button className="mt-2 w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none">
+          {answerLoading ? "Loading..." : "Reply"}
+          </button>
+        </form>
       </div>
       </Layout>
         );
