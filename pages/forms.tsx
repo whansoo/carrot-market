@@ -25,6 +25,7 @@ export default function Forms() {
                 value: 5,
             }
             })} type="text" placeholder='Username'/>
+            {/* {errors.username?.message} */}
         <input {...register('email', {
             required: 'Email is required',
             validate: {

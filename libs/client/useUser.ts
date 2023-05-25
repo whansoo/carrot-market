@@ -5,7 +5,7 @@ import useSWR from "swr";
 
 
 export default function useUser() {
-  const { data, error } = useSWR("/api/users/me");
+  const { data, error } = useSWR("/api/users/me"); //key값인 것과 동시에 api호출도 가능
   const router = useRouter();
    
   useEffect(() => {

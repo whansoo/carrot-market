@@ -6,13 +6,20 @@ import useUser from '@components/libs/client/useUser';
 import useSWR from "swr";
 import { Product } from "@prisma/client";
 
+interface ProductWithCount extends Product {
+  _count: {
+    favs: number;
+  };
+}
+
 interface ProductsResponse {
   ok: boolean;
-  products: Product[];
+  products: ProductWithCount[];
 }
 export default function Home() {
-  const { user, isLoading } = useUser();
+  // const { user, isLoading } = useUser();
   const { data } = useSWR<ProductsResponse>("/api/products");
+console.log(data)
   return (
     <Layout title="홈" hasTabBar>
     <div className="flex flex-col space-y-5 divide-y">
@@ -23,10 +30,10 @@ export default function Home() {
           title={product.name}
           price={product.price}
           comments={1}
-          hearts={1}
+          hearts={product._count.favs}
         />
       ))}
-      <FloatingButton href="/items/upload">
+      <FloatingButton href="/products/upload">
         <svg
           className="h-6 w-6"
           xmlns="http://www.w3.org/2000/svg"
