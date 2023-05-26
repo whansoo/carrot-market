@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
 import { Post } from "@prisma/client";
+import useCoords from "@components/libs/client/useCoords";
 
 interface WriteForm {
    question: string;
@@ -16,13 +17,14 @@ interface WriteForm {
  }
 
 export default function Write () {
+   const { latitude, longitude } = useCoords();
    const router = useRouter();
    const { register, handleSubmit } = useForm<WriteForm>();
    const [post, { loading, data }] = useMutation<WriteResponse>("/api/posts");
    const onValid = (data: WriteForm) => {
       if(loading) return;
       console.log(data)
-      post(data)
+      post({ ...data, latitude, longitude });
     };
     useEffect(() => {
       if (data && data.ok) {
