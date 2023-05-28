@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import withHandler, { ResponseType } from "@components/libs/server/withHandler";
 import client from "@components/libs/server/client";
-import { withIronSessionApiRoute } from "iron-session/next";
 import { withApiSession } from "@components/libs/server/withSession";
 
 
